@@ -29,7 +29,7 @@ This is a taxi booking app project developed using **React**, **Node.js**, **Exp
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/NIPUN0BUGS/CTAXI.git
+   git clone https://github.com/NIPUN0BUGS/CTAXI-user.git
    ```
 
 2. Navigate to the project directory:
