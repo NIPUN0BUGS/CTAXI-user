@@ -1,35 +1,43 @@
+// src/components/LocationForm.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
-import ViewAvailableList from './viewAvailableList'; // Ensure correct import path
-import locations from '../config/Locations'; // Ensure correct import path
+import ViewAvailableList from './viewAvailableList';
+import { locations, locationsSinhala } from '../config/Locations'; // Importing locations correctly
 import { TextField, MenuItem, Button, Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search'
+import SearchIcon from '@mui/icons-material/Search';
 
-
+// Create a mapping of Sinhala locations to English locations
+const locationMapping = {
+  "ගම්පොල 1": "Gampola 1",
+  "ගම්පොල 2": "Gampola 2",
+  "ගම්පොල 3": "Gampola 3",
+  "ගම්පොල 4": "Gampola 4",
+  "ගම්පොල 5": "Gampola 5",
+};
 
 const LocationForm = () => {
   const [pickupLocation, setPickupLocation] = useState("");
-  const [drivers, setDrivers] = useState([]); // Array to hold all drivers
+  const [drivers, setDrivers] = useState([]);
   const [showDrivers, setShowDrivers] = useState(false);
-  const [error, setError] = useState(null); // To capture errors
+  const [error, setError] = useState(null);
   const [language, setLanguage] = useState('en');
 
   const handleLocationChange = (event) => {
     setPickupLocation(event.target.value);
   };
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const locationToFetch = language === 'si' ? locationMapping[pickupLocation] : pickupLocation; // Get the corresponding English location
     try {
-      const response = await axios.get(`http://localhost:8081/drivers?location=${pickupLocation}`);
-      setDrivers(response.data); // Set all drivers returned
-      setShowDrivers(true); // Show the drivers table
+      const response = await axios.get(`http://localhost:8081/drivers?location=${locationToFetch}`);
+      setDrivers(response.data);
+      setShowDrivers(true);
       setError(null);
     } catch (error) {
       console.error("Error fetching drivers:", error);
-      setError("Error fetching drivers. Please try again later."); // Set error state
+      setError("Error fetching drivers. Please try again later.");
       setShowDrivers(false);
     }
   };
@@ -61,13 +69,13 @@ const LocationForm = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '12px',
-                backgroundColor: '#e0f7fa', // Light blue background for the dropdown
+                backgroundColor: '#e0f7fa',
               },
               '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#00796b', // Green border
+                borderColor: '#00796b',
               },
               '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#004d40', // Darker green on hover
+                borderColor: '#004d40',
               },
               minWidth: '250px',
             }}
@@ -75,7 +83,11 @@ const LocationForm = () => {
             <MenuItem value="" disabled>
               {language === 'en' ? 'Select your pickup location' : 'ඔබේ ස්ථානය තෝරන්න'}
             </MenuItem>
-            {locations.map((location, index) => (
+            {language === 'en' ? locations.map((location, index) => (
+              <MenuItem key={index} value={location}>
+                {location}
+              </MenuItem>
+            )) : locationsSinhala.map((location, index) => (
               <MenuItem key={index} value={location}>
                 {location}
               </MenuItem>
@@ -85,14 +97,14 @@ const LocationForm = () => {
             value={language}
             exclusive
             onChange={handleLanguageChange}
-            sx={{ marginLeft: '10px', display: 'flex', borderRadius: '12px', backgroundColor: '#e0f7fa' }} // Background color for the group
+            sx={{ marginLeft: '10px', display: 'flex', borderRadius: '12px', backgroundColor: '#e0f7fa' }}
           >
             <ToggleButton
               value="en"
               sx={{
                 border: 'none',
-                color: language === 'en' ? '#FFD700' : '#B0BEC5', // Gold for active, light gray for inactive
-                backgroundColor: language === 'en' ? '#00796B !important' : '#B2DFDB !important', // Teal for active, light teal for inactive
+                color: language === 'en' ? '#FFD700' : '#B0BEC5',
+                backgroundColor: language === 'en' ? '#00796B !important' : '#B2DFDB !important',
                 padding: '15px 20px',
                 borderRadius: '12px',
               }}
@@ -103,16 +115,14 @@ const LocationForm = () => {
               value="si"
               sx={{
                 border: 'none',
-                color: language === 'si' ? '#FFD700' : '#B0BEC5', // Gold for active, light gray for inactive
-                backgroundColor: language === 'si' ? '#FF5722 !important' : '#B2DFDB !important', // Deep Orange for active, light teal for inactive
+                color: language === 'si' ? '#FFD700' : '#B0BEC5',
+                backgroundColor: language === 'si' ? '#FF5722 !important' : '#B2DFDB !important',
                 padding: '15px 20px',
                 borderRadius: '12px',
               }}
             >
               සිංහල
             </ToggleButton>
-
-
           </ToggleButtonGroup>
         </Box>
 
@@ -120,20 +130,19 @@ const LocationForm = () => {
           type="submit"
           variant="contained"
           sx={{
-            backgroundColor: '#66B2FF !important', // Background color for the button
-            color: 'black', // Black text color for contrast
-            padding: '12px 24px', // Slightly increased padding for a larger button
+            backgroundColor: '#66B2FF !important',
+            color: 'black',
+            padding: '12px 24px',
             borderRadius: '12px',
             marginTop: '20px',
-            fontFamily: '"Noto Sans Sinhala", sans-serif', // Add a suitable font family
-            fontWeight: 'bold', // Make the text bold
-            fontSize: '1.2rem', // Increase font size for better visibility
+            fontFamily: '"Noto Sans Sinhala", sans-serif',
+            fontWeight: 'bold',
+            fontSize: '1.2rem',
           }}
         >
-          <SearchIcon/>
+          <SearchIcon />
           {language === 'en' ? 'Find Drivers' : 'රියදුරන් සොයන්න'}
         </Button>
-        
       </form>
       {error && <Typography color="error">{error}</Typography>}
       {showDrivers && <ViewAvailableList drivers={drivers} language={language} />}

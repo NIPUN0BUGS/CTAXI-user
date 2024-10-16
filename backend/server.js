@@ -45,7 +45,7 @@ app.get('/drivers', (req, res) => {
         return res.status(400).json({ error: 'Location is required' });
     }
 
-    db.query(
+    db.query(//fetch all available drivers according to driver location
         'SELECT * FROM drivers WHERE driverAvailability = 1 AND LOWER(driverLocation) = LOWER(?)',
         [location],
         (err, results) => {

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+// src/components/viewAvailableList.jsx
+
+import React, { useState } from 'react'; // Importing useState
 import { Container, Typography, Card, CardContent, CardActions, Button, Collapse, Stack } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import '../ViewAvailableList.css';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { driverNameMapping } from '../config/Locations'; // Ensure correct import path
 
-
-const ViewAvailableList = ({ drivers, language }) => { // Ensure language is received as prop
-
-  const [expandedDriverId, setExpandedDriverId] = useState(null);
+const ViewAvailableList = ({ drivers, language }) => {
+  const [expandedDriverId, setExpandedDriverId] = useState(null); // Using useState to manage expanded driver
 
   const handleDriverClick = (driverId) => {
     setExpandedDriverId((prevId) => (prevId === driverId ? null : driverId));
@@ -20,7 +20,7 @@ const ViewAvailableList = ({ drivers, language }) => { // Ensure language is rec
 
   return (
     <Container className='outerbox1' sx={{ padding: '20px', bgcolor: '#F5EFFF', borderRadius: '10px' }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: 'textSecondary' }}>
+      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: 'RED' }}>
         {language === 'en' ? 'Available Drivers' : 'ලබාගත හැකි රියදුරන්'}
       </Typography>
 
@@ -53,7 +53,7 @@ const ViewAvailableList = ({ drivers, language }) => { // Ensure language is rec
                   ) : (
                     <CancelIcon sx={{ color: 'red', marginRight: '8px' }} />
                   )}
-                  {driver.driverName}
+                  {language === 'en' ? driver.driverName : driverNameMapping[driver.driverName] || driver.driverName}
                 </Typography>
                 <Collapse in={expandedDriverId === driver.id}>
                   <Stack spacing={1} sx={{ marginTop: 1 }}>
@@ -84,9 +84,9 @@ const ViewAvailableList = ({ drivers, language }) => { // Ensure language is rec
                   variant="contained"
                   sx={{
                     borderRadius: '25px',
-                    backgroundColor: '#4CAF50 !important', // Green background
+                    backgroundColor: '#4CAF50 !important',
                     '&:hover': {
-                      backgroundColor: '#d32f2f !important', // Darker red on hover
+                      backgroundColor: '#d32f2f !important',
                     },
                     textTransform: 'none',
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
