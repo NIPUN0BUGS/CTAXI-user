@@ -1,6 +1,8 @@
 
 
 # CTAXI - Taxi Booking App
+![image](https://github.com/user-attachments/assets/4aeb6578-0208-4ace-a6da-41f5a98ec279)
+
 
 This is a taxi booking app project developed using **React**, **Node.js**, **Express**, and **MySQL**. It provides features for both users and admins, allowing users to book taxis and admins to manage drivers.
 
